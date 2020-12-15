@@ -6,26 +6,25 @@ def parse_file(name):
 def play(start, turns):
     turn = 1
     lastplayed = {}
-    lastplay = 0
 
     for play in start:
-        lastplayed[play] = (turn, 0)
-        lastplay = play
+        nextplay = lastplayed.get(play, 0)
+        if nextplay != 0:
+            nextplay = turn - nextplay
+
+        lastplayed[play] = turn
         turn += 1
 
     while turn <= turns:
-        prev, last = lastplayed.get(lastplay)
-        if last != 0:
-            play = prev - last
-        else:
-            play = 0
+        play = nextplay
+        nextplay = lastplayed.get(play, 0)
+        if nextplay != 0:
+            nextplay = turn - nextplay
 
-        prev2, last2 = lastplayed.get(play, (0, 0))
-        lastplayed[play] = (turn, prev2)
-        lastplay = play
+        lastplayed[play] = turn
         turn += 1
 
-    return lastplay
+    return play
 
 
 def part1(filename="input"):
